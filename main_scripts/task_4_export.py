@@ -85,7 +85,6 @@ for annotator_package in annotators_packages:
 
     # - Add data to list
     annotators_quality.append([annotator_id.split("_")[1], correct, incorrect, null, total])
-    print(annotator_id.split("_")[1], correct, incorrect, null, total)
 
 
 # Store data in Pandas dataframe
