@@ -51,10 +51,10 @@ question_groups_df = pd.DataFrame({"yes-no": question_groups[:, 0],
                                    "count": question_groups[:, 1],
                                    "percent": question_groups[:, 2]})
 
-question_groups_df = question_groups_df.astype({'count': int})
-ax = question_groups_df.plot.pie(y='count', autopct='%.2f', colormap=cs, labels=None)
-ax.set_title("Questions grouped based on yes-no count", fontsize=fs)
-ax.legend(question_groups_df['yes-no'])
+question_groups_df = question_groups_df.astype({'count': int, 'percent': float})
+ax = question_groups_df.plot.pie(y='percent', autopct='%.2f', colormap=cs, labels=None)
+ax.set_title("Questions grouped based on yes-no count percentage", fontsize=fs)
+ax.legend(question_groups_df['yes-no'], prop={'size': fs})
 
 
 # Export data to csv file
