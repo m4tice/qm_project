@@ -68,7 +68,7 @@ for vendor_user_id in unsolved_user:
     grouped_unsolved_data.append([vendor_user_id, cant_solve_count, corrupt_data_count])
 
 
-# Store data in Pandas dataframe
+# Store data in Pandas DataFrame
 grouped_unsolved_data_df = pd.DataFrame({'vendor_user_id': np.array(grouped_unsolved_data)[:, 0],
                                          'cant_solve': np.array(grouped_unsolved_data)[:, 1],
                                          'corrupt_data': np.array(grouped_unsolved_data)[:, 2]})

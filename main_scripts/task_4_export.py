@@ -87,7 +87,7 @@ for annotator_package in annotators_packages:
     annotators_quality.append([annotator_id.split("_")[1], correct, incorrect, null, total])
 
 
-# Store data in Pandas dataframe
+# Store data in Pandas DataFrame
 annotators_quality = np.array(annotators_quality)
 label = annotators_quality[:, 0]
 correct = [int(item) for item in annotators_quality[:, 1]]
