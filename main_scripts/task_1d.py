@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 
 ap_results, result_keys = utils.get_result_keys(ap_df)
 export_csv = False
+fs = 15
 
 # 1d: Are there questions for which annotators highly disagree?
-disagree_limit = 2
-highly_disagree_questions = []
+question_answers = []
 
 for result_key in result_keys:
     result_amount = len(ap_results[result_key]['results'])
@@ -24,21 +24,44 @@ for result_key in result_keys:
     ans_yes = answers.count('yes')
     ans_no = answers.count('no')
 
-    cond = ans_yes > disagree_limit and ans_no > disagree_limit
-
     # - Add data to list
-    if cond:
-        highly_disagree_questions.append([result_key, ans_yes, ans_no, cant_solve, corrupt_amount])
+    question_answers.append([result_key, ans_yes, ans_no, cant_solve, corrupt_amount])
 
-highly_disagree_questions = np.array(highly_disagree_questions)
-highly_disagree_questions_df = pd.DataFrame({"result_key": highly_disagree_questions[:, 0],
-                                             "yes": highly_disagree_questions[:, 1],
-                                             "no": highly_disagree_questions[:, 2],
-                                             "cant_solve": highly_disagree_questions[:, 3],
-                                             "corrupt_data": highly_disagree_questions[:, 4]})
+question_answers = np.array(question_answers)
+question_answers_df = pd.DataFrame({"result_key": question_answers[:, 0],
+                                    "yes": question_answers[:, 1],
+                                    "no": question_answers[:, 2],
+                                    "cant_solve": question_answers[:, 3],
+                                    "corrupt_data": question_answers[:, 4]})
+
+
+# Visualization
+cs = plt.get_cmap('tab20')
+
+# Group questions based on difference
+question_answers_grouped = question_answers_df.groupby('yes')
+total_answer = len(question_answers)
+
+question_groups = [[int(item[0]), len(item[1])] for item in question_answers_grouped]
+question_groups = [["{}-{}".format(item[0], 10 - item[0]), item[1], round(item[1] / total_answer * 100, 2)]
+                   for item in sorted(question_groups)]
+question_groups = np.array(question_groups)
+
+question_groups_df = pd.DataFrame({"yes-no": question_groups[:, 0],
+                                   "count": question_groups[:, 1],
+                                   "percent": question_groups[:, 2]})
+
+question_groups_df = question_groups_df.astype({'count': int})
+ax = question_groups_df.plot.pie(y='count', autopct='%.2f', colormap=cs, labels=None)
+ax.set_title("Questions grouped based on yes-no count", fontsize=fs)
+ax.legend(question_groups_df['yes-no'])
+
 
 # Export data to csv file
 if export_csv:
-    highly_disagree_questions_df.to_csv("../files/highly_disagree_questions.csv")
+    question_answers_df.to_csv("../files/question_answers.csv")
+    question_groups_df.to_csv("../files/question_groups.csv")
 
-print(highly_disagree_questions_df)
+print(question_groups_df)
+
+plt.show()
