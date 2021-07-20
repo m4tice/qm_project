@@ -10,8 +10,13 @@ ap_results, result_keys = utils.get_result_keys(ap_df)
 ref_df, ref_keys = utils.get_img_keys(ref_df)
 export_csv = True
 
+
+def percent_cal(value, sum):
+    return value / sum * 100
+
 # 4: Using the reference set, can you identify good and bad annotators? Please use statistics and visualizations.
 # Feel free to get creative.
+
 
 # Get annotators
 annotators = []
@@ -61,7 +66,7 @@ for annotator_package in annotators_packages:
     correct, incorrect, null = 0, 0, 0
 
     # - Current annotator
-    annotator_id = annotator_package[0][0]
+    vendor_user_id = annotator_package[0][0]
 
     # - Looping through each package and count the correct, incorrect and null answer
     for user_id, im_name, user_an in annotator_package:
@@ -84,22 +89,21 @@ for annotator_package in annotators_packages:
     total = correct + incorrect + null
 
     # - Add data to list
-    annotators_quality.append([annotator_id.split("_")[1], correct, incorrect, null, total])
+    annotators_quality.append([vendor_user_id, correct, incorrect, null, total,
+                               percent_cal(correct, total), percent_cal(incorrect, total), percent_cal(null, total)])
 
 
 # Store data in Pandas DataFrame
-annotators_quality = np.array(annotators_quality)
-label = annotators_quality[:, 0]
-correct = [int(item) for item in annotators_quality[:, 1]]
-incorrect = [int(item) for item in annotators_quality[:, 2]]
-null = [int(item) for item in annotators_quality[:, 3]]
-total = [int(item) for item in annotators_quality[:, 4]]
+# annotators_quality = np.array(annotators_quality)
+# label = annotators_quality[:, 0]
+# correct = [int(item) for item in annotators_quality[:, 1]]
+# incorrect = [int(item) for item in annotators_quality[:, 2]]
+# null = [int(item) for item in annotators_quality[:, 3]]
+# total = [int(item) for item in annotators_quality[:, 4]]
 
-annotators_quality_df = pd.DataFrame({'id': label,
-                                      'correct': correct,
-                                      'incorrect': incorrect,
-                                      'null': null,
-                                      'total': total})
+annotators_quality_df = pd.DataFrame(data=annotators_quality,
+                                     columns=['id', 'correct', 'incorrect', 'null', 'total',
+                                              'correct_p', 'incorrect_p', 'null_p'])
 
 # Export data to csv file
 if export_csv:

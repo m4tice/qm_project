@@ -17,7 +17,7 @@ ref_ans = np.array(ref_ans)
 ref_ans_df = pd.DataFrame({'key': ref_ans[:, 0], 'is_bicycle': ref_ans[:, 1]})
 ref_ans_df = ref_ans_df.groupby('is_bicycle').nunique()
 ref_ans_df = ref_ans_df.rename(columns={"key": "count"})
-ax = ref_ans_df.plot.pie(y='count', autopct='%.2f', labels=None)
+ax = ref_ans_df.plot.pie(y='count', autopct='%.2f%%', labels=None)
 ax.set_title("Reference set distribution percentage", fontsize=fs)
 
 plt.show()

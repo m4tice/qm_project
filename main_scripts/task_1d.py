@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 ap_results, result_keys = utils.get_result_keys(ap_df)
-export_csv = False
+export_csv = True
 fs = 15
 
 # 1d: Are there questions for which annotators highly disagree?
@@ -27,13 +27,9 @@ for result_key in result_keys:
     # - Add data to list
     question_answers.append([result_key, ans_yes, ans_no, cant_solve, corrupt_amount])
 
-question_answers = np.array(question_answers)
-question_answers_df = pd.DataFrame({"result_key": question_answers[:, 0],
-                                    "yes": question_answers[:, 1],
-                                    "no": question_answers[:, 2],
-                                    "cant_solve": question_answers[:, 3],
-                                    "corrupt_data": question_answers[:, 4]})
 
+question_answers_df = pd.DataFrame(data=question_answers,
+                                   columns=["result_key", "yes", "no", "cant_solve", "corrupt_data"])
 
 # Visualization
 cs = plt.get_cmap('tab20')
@@ -43,24 +39,21 @@ question_answers_grouped = question_answers_df.groupby('yes')
 total_answer = len(question_answers)
 
 question_groups = [[int(item[0]), len(item[1])] for item in question_answers_grouped]
-question_groups = [["{}-{}".format(item[0], 10 - item[0]), item[1], round(item[1] / total_answer * 100, 2)]
+question_groups = [["{}:{}".format(item[0], 10 - item[0]), item[1], round(item[1] / total_answer * 100, 2)]
                    for item in sorted(question_groups)]
-question_groups = np.array(question_groups)
-
-question_groups_df = pd.DataFrame({"yes-no": question_groups[:, 0],
-                                   "count": question_groups[:, 1],
-                                   "percent": question_groups[:, 2]})
+question_groups_df = pd.DataFrame(data=question_groups, columns=['yes:no', 'count', 'percent'])
 
 question_groups_df = question_groups_df.astype({'count': int, 'percent': float})
-ax = question_groups_df.plot.pie(y='percent', autopct='%.2f', colormap=cs, labels=None)
-ax.set_title("Questions grouped based on yes-no count percentage", fontsize=fs)
-ax.legend(question_groups_df['yes-no'], prop={'size': fs})
+explode = (0, 0, 0, 0, 0.1, 0.1, 0.1, 0, 0, 0, 0)
+ax = question_groups_df.plot.pie(y='percent', autopct='%.2f%%', colormap=cs, labels=None, explode=explode)
+ax.set_title("Questions grouped based on yes:no ratio percentage", fontsize=fs)
+ax.legend(question_groups_df['yes:no'], prop={'size': fs})
 
 
 # Export data to csv file
 if export_csv:
-    question_answers_df.to_csv("../files/question_answers.csv")
-    question_groups_df.to_csv("../files/question_groups.csv")
+    question_answers_df.to_csv("../files/question_answers.csv", index=False)
+    question_groups_df.to_csv("../files/question_groups.csv", index=False)
 
 print(question_groups_df)
 
