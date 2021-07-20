@@ -12,7 +12,11 @@ export_csv = True
 
 
 def percent_cal(value, sum):
+    """
+    Calculate percent value
+    """
     return value / sum * 100
+
 
 # 4: Using the reference set, can you identify good and bad annotators? Please use statistics and visualizations.
 # Feel free to get creative.
@@ -92,22 +96,18 @@ for annotator_package in annotators_packages:
     annotators_quality.append([vendor_user_id, correct, incorrect, null, total,
                                percent_cal(correct, total), percent_cal(incorrect, total), percent_cal(null, total)])
 
+    print(vendor_user_id, correct, incorrect, null, total,
+                               percent_cal(correct, total), percent_cal(incorrect, total), percent_cal(null, total))
+
 
 # Store data in Pandas DataFrame
-# annotators_quality = np.array(annotators_quality)
-# label = annotators_quality[:, 0]
-# correct = [int(item) for item in annotators_quality[:, 1]]
-# incorrect = [int(item) for item in annotators_quality[:, 2]]
-# null = [int(item) for item in annotators_quality[:, 3]]
-# total = [int(item) for item in annotators_quality[:, 4]]
-
 annotators_quality_df = pd.DataFrame(data=annotators_quality,
-                                     columns=['id', 'correct', 'incorrect', 'null', 'total',
+                                     columns=['vendor_user_id', 'correct', 'incorrect', 'null', 'total',
                                               'correct_p', 'incorrect_p', 'null_p'])
 
 # Export data to csv file
 if export_csv:
-    annotators_quality_df.to_csv("../files/annotators_quality_assessment_pc.csv", index=False)
+    annotators_quality_df.to_csv("../files/annotators_quality_assessment.csv", index=False)
 
 
 print(annotators_quality_df)

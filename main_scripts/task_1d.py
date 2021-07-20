@@ -18,6 +18,9 @@ for result_key in result_keys:
     answers = [ap_results[result_key]['results'][i]['task_output']['answer'] for i in range(result_amount)]
     solves = [ap_results[result_key]['results'][i]['task_output']['cant_solve'] for i in range(result_amount)]
     corrupts = [ap_results[result_key]['results'][i]['task_output']['corrupt_data'] for i in range(result_amount)]
+    image_url = ap_results[result_key]['results'][0]['task_input']['image_url']
+    image_name = image_url.split("/")[-1]
+    image_name = image_name.split(".")[0]
 
     cant_solve = solves.count(True)
     corrupt_amount = corrupts.count(True)
@@ -25,11 +28,15 @@ for result_key in result_keys:
     ans_no = answers.count('no')
 
     # - Add data to list
-    question_answers.append([result_key, ans_yes, ans_no, cant_solve, corrupt_amount])
+    question_answers.append([result_key, ans_yes, ans_no, cant_solve, corrupt_amount, image_name, image_url])
 
 
 question_answers_df = pd.DataFrame(data=question_answers,
-                                   columns=["result_key", "yes", "no", "cant_solve", "corrupt_data"])
+                                   columns=["result_key", "yes", "no", "cant_solve", "corrupt_data", "image_name", "image_url"])
+
+yes_group = ['4', '5', '6']
+highly_disagree_group = question_answers_df[~question_answers_df['yes'].isin(yes_group)]
+
 
 # Visualization
 cs = plt.get_cmap('tab20')
@@ -55,6 +62,9 @@ if export_csv:
     question_answers_df.to_csv("../files/question_answers.csv", index=False)
     question_groups_df.to_csv("../files/question_groups.csv", index=False)
 
-print(question_groups_df)
+# print(question_groups_df)
+
+print(highly_disagree_group)
+
 
 plt.show()

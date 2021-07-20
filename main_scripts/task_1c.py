@@ -45,6 +45,6 @@ for p, count in zip(ax.patches, annotator_result_count_df['result_count'].values
 if export_csv:
     annotator_result_count_df.to_csv("../files/annotator_result_count.csv", index=False)
 
-print(annotator_result_count_df)
+print(annotator_result_count_df.describe())
 
 plt.show()
