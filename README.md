@@ -27,13 +27,14 @@ The directory 'main_scripts' contains the scripts used for different analyzing p
          * analyze the balance of the reference set
 * Task 4:
     * task_4_export.py
-         * collect data by doing cross-checking all answers with the reference set. The execution takes approximately 45 minutes to complete and it only needs to execute once to create the *'annotators_quality_assessment.csv'* file.
+         * The only purpose is to collect data by doing cross-checking all answers with the reference set and create the *'annotators_quality_assessment.csv'*.
+         * The execution takes approximately 45 minutes to complete; therefore, if the file *'annotators_quality_assessment.csv'* already exists, there is no need to execute this script.
     * task_4_visualization.py
-         * visualize and analyze the answers of all annotators
+         * Load the *'annotators_quality_assessment.csv'*, using the loaded data to visualize and analyze the answers of all annotators
     * task_4_visualization_extra.py
-         * visualize and analyze the answers of annotators with sample sizes greater than the standard deviation limit.
+         * Load the *'annotators_quality_assessment.csv'*, using the loaded data to visualize and analyze the answers of annotators with sample sizes greater than the standard deviation limit.
     * task_4_good_bad_annotators.py
-         * Produce the data of a group of chosen annotators
+         * Load the *'annotators_quality_assessment.csv'*, using the loaded data to retrieve data of a group of wanted annotators
  
 
 The directory 'files' contains the csv files created from the .py files  
