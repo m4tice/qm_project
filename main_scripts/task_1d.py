@@ -4,6 +4,8 @@ from main_scripts.utils import ref_df, ap_df
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from PIL import Image
+import requests
 
 
 ap_results, result_keys = utils.get_result_keys(ap_df)
@@ -22,6 +24,7 @@ for result_key in result_keys:
     image_name = image_url.split("/")[-1]
     image_name = image_name.split(".")[0]
 
+    # Count the occurrence of each case
     cant_solve = solves.count(True)
     corrupt_amount = corrupts.count(True)
     ans_yes = answers.count('yes')
@@ -34,8 +37,9 @@ for result_key in result_keys:
 question_answers_df = pd.DataFrame(data=question_answers,
                                    columns=["result_key", "yes", "no", "cant_solve", "corrupt_data", "image_name", "image_url"])
 
+# Specify the amount of 'yes' counts
 yes_group = ['4', '5', '6']
-highly_disagree_group = question_answers_df[~question_answers_df['yes'].isin(yes_group)]
+highly_disagree_group_df = question_answers_df[question_answers_df['yes'].isin(yes_group)]
 
 
 # Visualization
@@ -54,17 +58,27 @@ question_groups_df = question_groups_df.astype({'count': int, 'percent': float})
 explode = (0, 0, 0, 0, 0.1, 0.1, 0.1, 0, 0, 0, 0)
 ax = question_groups_df.plot.pie(y='percent', autopct='%.2f%%', colormap=cs, labels=None, explode=explode)
 ax.set_title("Questions grouped based on yes:no ratio percentage", fontsize=fs)
-ax.legend(question_groups_df['yes:no'], prop={'size': fs})
+ax.legend(question_groups_df['yes:no'], prop={'size': 12})
 
 
 # Export data to csv file
 if export_csv:
     question_answers_df.to_csv("../files/question_answers.csv", index=False)
     question_groups_df.to_csv("../files/question_groups.csv", index=False)
+    highly_disagree_group_df.to_csv("../files/highly_disagree_group.csv", index=False)
 
-# print(question_groups_df)
 
-print(highly_disagree_group)
+# Display 3 random samples
+highly_disagree_sample_df = highly_disagree_group_df.sample(n=3)
+highly_disagree_sample_df = highly_disagree_sample_df['image_url']
+urls = [item for item in highly_disagree_sample_df]
+fig2, ax2 = plt.subplots(1, 3)
+fig2.tight_layout()
+for i in range(len(urls)):
+    im = Image.open(requests.get(urls[i], stream=True).raw)
+    ax2[i].imshow(im)
 
+
+print(question_groups_df)
 
 plt.show()
