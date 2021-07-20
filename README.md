@@ -3,6 +3,8 @@ Bicycle project crowd evaluation.
 
 This repository is created for evaluating the quality and performance of a new crowd in the project Bicycle crowd evaluation.  
 
+For an effortless setup, simply open the file 'qm_project.ipynb' in Jupyter Notebook or Colab. It contains all the description, analyzation and result of all the tasks.
+
 The directory 'main_scripts' contains the scripts used for different analyzing purposes:
 
 * Task 1:
@@ -37,5 +39,6 @@ The directory 'main_scripts' contains the scripts used for different analyzing p
          * Load the *'annotators_quality_assessment.csv'*, using the loaded data to retrieve data of a group of wanted annotators
  
 
-The directory 'files' contains the csv files created from the .py files  
+The directory 'files' contains the .csv files created from the .py files  
+The directory 'pictures' contains the plots created from the .py files
 
